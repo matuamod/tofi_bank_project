@@ -1,0 +1,55 @@
+{% extends 'base/layout.html' %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="auth-form mt-5">
+            <h6 class="mb-4 text-warning">Don't have an account?<span class="float-end"><a class="text-decoration-none text-warning" href="{% url 'registration' %}">Register</a></span></h6>
+            <div class="form-error">{{ form.non_field_errors }}</div>
+            {% for f in form %}
+                <div class="mb-3 text-warning">
+                    <label class="form-label" for="{{ f.id_for_label }}">{{ f.label }}: </label>
+                    <div>{{ f }}</div>
+                    <div class="form-error">{{ f.errors }}</div>
+                </div>
+                {% if forloop.counter == 2 %}
+                    <button class='form-control btn btn-outline-warning' id="sendSecureCode" type='button'>Send security code</button>
+                    <div class="mt-2"><span class='text-warning' id='sentStatus'></span><div>
+                {% endif %}
+            {% endfor %}
+            <input id="Enter" type="submit" class="form-control btn btn-outline-warning mt-2" value="Enter">
+        </div>
+    </form>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        let sendSecureCodeBtn = document.querySelector('#sendSecureCode');
+        let csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+        let username = document.querySelector('#id_username');
+        let sentStatus = document.querySelector('#sentStatus');
+
+        sendSecureCodeBtn.onclick = function() {
+
+            $.ajax({
+                headers: {'X-CSRFToken': csrftoken},
+                url: '/login/secure-code',
+                type: 'POST',
+                data: {
+                    'username': username.value,
+                },
+                success: function(response) {
+                    sentStatus.textContent = "Security code sent by email.";
+                },
+                error: function(xhr, status, error) {
+                    sentStatus.textContent = "User with this login not found...";
+                }
+
+            });
+        }
+    </script>
+{% endblock %}

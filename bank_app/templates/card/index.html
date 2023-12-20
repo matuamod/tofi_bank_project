@@ -1,0 +1,32 @@
+{% extends 'base/layout.html' %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+    <div class="d-flex flex-column justify-content-center align-items-center">
+        <h1 class='mt-5 mb-5 text-warning text-center border-bottom border-white'>You have successfully issued a bank card</h1>
+            <div class='mt-5 mb-5 align-center w-75 rounded'>
+                <div class="row bg-white rounded-top p-2">
+                    <span class="text-dark">Bank card number:</span><span class="text-dark h2 text-right">{{ card.number }}</span>
+                </div>
+                <div class="row bg-white p-2">
+                    <span class="ttext-dark">Expiration date:</span><span class="text-dark h2 text-right">{{ card.expire_date.month }}/{{ card.expire_date.year }}</span>
+                </div>
+                <div class="row bg-white p-2">
+                    <span class="text-dark">Owner:</span><span class="text-dark h2 text-right">{{ card.surname }} {{ card.given_name }}</span>
+                </div>
+                <div class="row bg-white rounded-bottom p-2">
+                    <span class="text-dark">CVV-code:</span><span class="text-dark h2 text-right">{{ cvv_code_source }}</span>
+                </div>
+            </div>
+            <div class="mt-5 mb-5 border border-danger bg-white rounded p-3">
+                <h1 class='text-danger text-center'>REMEMBER CVV CODE AND DO NOT SHARE IT TO ANYONE</h1>
+            </div>
+        </div>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}

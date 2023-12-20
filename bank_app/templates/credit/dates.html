@@ -1,0 +1,56 @@
+{% extends 'base/layout.html' %}
+{% block title %}
+{{ title }}
+{% endblock %}
+
+{% block content %}
+    {% if user.is_authenticated %}
+        <section class="bg-light mt-4">
+            <div class="row fw-bold bg-dark text-warning">
+                <div class="col text-center border border white">
+                    № payment
+                </div>
+                <div class="col text-center border border white">
+                    Payment date
+                </div>
+                <div class="col text-center border border white">
+                    Total payment amount
+                </div>
+                <div class="col text-center border border white">
+                    Principal repayment amount
+                </div>
+                <div class="col text-center border border white">
+                    Interest repayment amount
+                </div>
+                <div class="col text-center border border white">
+                    Remaining payment
+                </div>
+            </div>
+            {% for key, data in credit_data.items %}
+                <div class="row bg-dark border-bottom border-start border-end border-dark py-1">
+                    <div class="col fw-bold text-center text-warning border border white">
+                        {{ forloop.counter }}
+                    </div>
+                    <div class="col text-center text-warning border border white">
+                        {{ data.payment_date|date:"d.m.Y" }}
+                    </div>
+                    <div class="col text-center text-warning border border white">
+                        {{ data.payment_sum|floatformat:2 }}
+                    </div>
+                    <div class="col text-center text-warning border border white">
+                        {{ data.debt_payment|floatformat:2 }}
+                    </div>
+                    <div class="col text-center text-warning border border white">
+                        {{ data.interest_payment|floatformat:2 }}
+                    </div>
+                    <div class="col text-center text-warning border border white">
+                        {{ data.owed_sum|floatformat:2 }}
+                    </div>
+                </div>
+            {% endfor %}
+        </section>
+    {% endif %}
+{% endblock %}
+
+{% block script %}
+{% endblock %}
