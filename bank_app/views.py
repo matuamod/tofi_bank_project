@@ -146,12 +146,36 @@ def create_card(request):
 
 class CreditPageView(TemplateView):
     template_name = 'credit/index.html'
+    
+    def get_context_data(self, **kwargs) -> dict[str, any]:
+        context = super().get_context_data(**kwargs)
+
+        user = self.request.user
+
+        if (user.is_authenticated):        
+            if Card.objects.filter(user=user).exists():
+                cards = Card.objects.filter(user=user)
+                context['cards'] = cards
+
+                if ('active_card' not in context):
+                    context['active_card'] = 1
+
+        return context
+
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data(**kwargs)
+        
+        return self.render_to_response(context)
 
 
 def calculate_credit_dates(request):
     if request.method == 'POST':
         
+        sender_card = Card.objects.get(number=request.POST['sender_card'])
         credit_sum = Decimal(request.POST['credit_sum'])
+        sender_card.account.balance += credit_sum
+        sender_card.account.save()
+        
         credit_term = int(request.POST['credit_term'])
         credit_interest_rate = Decimal(request.POST['credit_interest_rate'])
         monthly_payment = Decimal(request.POST['monthly_payment'])

@@ -12,6 +12,7 @@ urlpatterns = [
     path("creating-bank-account", creating_bank_account, name='create_account'),
     path("create-card", create_card, name='create_card'),
     path("credit", CreditPageView.as_view(), name='credit'),
+    path("credit/<int:active_card>", CreditPageView.as_view(), name='credit'),
     path("credit-dates", calculate_credit_dates, name='calculate_credit_dates'),
     path("transactions", TransactionsPageView.as_view(), name='transactions'),
     path("transactions/<int:active_card>", TransactionsPageView.as_view(), name='transactions'),
